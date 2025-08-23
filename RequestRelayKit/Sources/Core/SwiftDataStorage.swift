@@ -59,6 +59,7 @@ public actor SwiftDataStorage: Storage {
         let fd = FetchDescriptor<QueueItemRecord>(
             predicate: #Predicate { $0.dedupeKey == key },
             sortBy: [
+                .init(\.priority, order: .forward),
                 .init(\.envelopeCreatedAt, order: .forward),
                 .init(\.id, order: .forward)
             ]
@@ -69,6 +70,7 @@ public actor SwiftDataStorage: Storage {
     public func loadAll() throws -> [QueueItem] {
         let fd = FetchDescriptor<QueueItemRecord>(
             sortBy: [
+                .init(\.priority, order: .forward),
                 .init(\.envelopeCreatedAt, order: .forward),
                 .init(\.id, order: .forward)
             ]

@@ -12,6 +12,7 @@ public struct RetryPolicy: Sendable {
     var baseBackoff: Duration = .seconds(1)
     var exponent: Double = 2.0
     var maxBackoff: Duration = .seconds(32)
+    var maxExperationTime: Duration = .seconds( 60 * 60 * 24) // 60 seconds * 60 minutes * 24 hours = 1 day
     var retryableStatus: Set<Int> = [408, 425, 429, 500, 502, 503, 504]
     var respectRetryAfter: Bool = true
     var offlineShortCircuit: Bool = true

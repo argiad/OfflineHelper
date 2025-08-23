@@ -59,7 +59,10 @@ actor Worker: WorkerProtocol {
 
     private func nextReadyBatch(now: Date) async -> [QueueItem] {
         // Storage should already order by (priority desc, nextAttemptAt asc, createdAt asc)
-        (try? await cfg.storage.loadReady(limit: cfg.batchSize, now: now)) ?? []
+
+        (try? await cfg.storage.loadReady(limit: cfg.batchSize, now: now))?.filter {
+            $0.envelope.createdAt.adding(cfg.retry.maxExperationTime) < now
+        } ?? []
     }
 
     private func classify(_ code: Int, headers: [String:String]) -> FailureKind? {

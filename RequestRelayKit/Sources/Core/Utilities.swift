@@ -92,3 +92,17 @@ struct OSLogger: Logger {
         #endif
     }
 }
+
+public extension Date {
+    /// Adds a Swift Concurrency `Duration` to a `Date`.
+    func adding(_ duration: Duration) -> Date {
+        let seconds = Double(duration.components.seconds) +
+                      Double(duration.components.attoseconds) / 1e18
+        return self.addingTimeInterval(seconds)
+    }
+
+    /// Mutating version
+    mutating func add(_ duration: Duration) {
+        self = adding(duration)
+    }
+}
