@@ -25,12 +25,15 @@ public struct OfflineRequest: Sendable, Codable, Equatable, Hashable {
                 priority: Int = 0,
                 createdAt: Date = .init(),
                 dedupeKey: String? = nil) {
+        
+        let adjustedPriority = (body?.count ?? 0) > 1_048_576 ? Int.max : priority
+        
         self.id = id
         self.url = url
         self.method = method
         self.headers = headers
         self.body = body
-        self.priority = priority
+        self.priority = adjustedPriority
         self.createdAt = createdAt
         self.dedupeKey = dedupeKey
     }
@@ -55,12 +58,14 @@ public extension OfflineRequest {
             headerDict = headers
         }
 
+        let adjustedPriority = (request.httpBody?.count ?? 0) > 1_048_576 ? Int.max : priority
+
         self.init(
             url: url,
             method: method,
             headers: headerDict,
             body: request.httpBody,
-            priority: priority,
+            priority: adjustedPriority,
             createdAt: Date(),
             dedupeKey: dedupeKey
         )
